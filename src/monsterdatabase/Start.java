@@ -15,10 +15,9 @@
 
 package monsterdatabase;
 
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -28,21 +27,10 @@ public class Start extends Application {
 
     @Override
     public void start(Stage primaryStage) 
-            throws FileNotFoundException, IOException, ClassNotFoundException {
-       
-       // Object to hold database 
-       MonsterCollection monsters;
-       
-       try ( // Open the file test.dat
-          ObjectInputStream input = new ObjectInputStream(
-                  new FileInputStream("test.dat"));
-       ) {
-          // Save MonsterCollection that is stored in test.dat into a variable
-          monsters = (MonsterCollection) input.readObject();
-       } // try-with-resources automatically closes input
+            throws IOException, FileNotFoundException, ClassNotFoundException {
        
        // Create a pane to display the file
-       DatabasePane pane = new DatabasePane(monsters);
+       DatabasePane pane = new DatabasePane(new File("test.dat"));
        
        // Create a scene and set it on the primaryStage
        Scene scene = new Scene(pane, 1100, 650);

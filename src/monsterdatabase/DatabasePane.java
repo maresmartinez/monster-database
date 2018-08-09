@@ -10,8 +10,14 @@
 
 package monsterdatabase;
 
-import java.util.NoSuchElementException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -34,11 +40,24 @@ public class DatabasePane extends BorderPane {
     protected MonsterCollection monsters;
     protected ObservableList<Monster> list;
     protected int currentIndex;
+    protected File databaseSave;
     
-    public DatabasePane(MonsterCollection monsters) {
-       this.detailsPane = new DetailsPane(monsters);
+    public DatabasePane(File databaseSave) 
+            throws FileNotFoundException, IOException, ClassNotFoundException {
+
+       // Object to hold database 
+       this.databaseSave = databaseSave;
+       
+       try ( // Open the file test.dat
+          ObjectInputStream input = new ObjectInputStream(
+                  new FileInputStream(this.databaseSave));
+       ) {
+          // Save MonsterCollection that is stored in test.dat into a variable
+          this.monsters = (MonsterCollection) input.readObject();
+       } // try-with-resources automatically closes input
        
        // Set to Homepage
+       this.detailsPane = new DetailsPane(monsters);
        setLeft(navPane);
        setCenter(listPane);
        
@@ -48,6 +67,7 @@ public class DatabasePane extends BorderPane {
        navPane.getBtDetails().setOnAction(e -> setCenter(detailsPane));
        navPane.getBtSearch().setOnAction(e -> setCenter(searchPane));
        navPane.getInpMonsterId().setOnAction(e -> seeDetails());
+       navPane.getBtSave().setOnAction(e -> saveToFile());
        
        // Set listeners on detailsPane
        detailsPane.displayMonsterDetails(monsters.get(currentIndex));
@@ -97,11 +117,37 @@ public class DatabasePane extends BorderPane {
           }
        });
        
+       // Set listeners on search
+       
        // Set List
-       this.monsters = monsters;
        this.list = monsters.getTableData();
        displayList();
 
+    }
+    
+    /**
+     * Saves the current database to the file passed in
+     */
+    protected void saveToFile() {
+       try {
+          Alert editConfirmation = new Alert(AlertType.CONFIRMATION);
+          editConfirmation.setTitle("Confirm");
+          editConfirmation.setHeaderText("Overwriting Database");
+          editConfirmation.setContentText("Are you sure you want to save these changes?");
+
+          Optional<ButtonType> result = editConfirmation.showAndWait();
+          if (result.get() == ButtonType.OK){
+             monsters.writeToFile(databaseSave);
+          }
+       } catch (IOException ex) {
+          Alert saveError = new Alert(AlertType.ERROR);
+          saveError.setTitle("Save Error");
+          saveError.setHeaderText("Save Error");
+          saveError.setContentText("Something went wrong\n"
+                  + "Your file was not saved.");
+          
+          saveError.showAndWait();
+       }
     }
     
     /**
@@ -223,7 +269,6 @@ public class DatabasePane extends BorderPane {
        // Update variables and display the database with changes
        listPane.refreshTable();
        setCenter(listPane);
-       
     }
     
     /**
