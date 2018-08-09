@@ -8,7 +8,7 @@
  *  
  */
 
-package monsterdatabase1;
+package monsterdatabase;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,67 +32,97 @@ import javafx.scene.text.FontWeight;
 
 public class DetailsPane extends GridPane {
 
-    public DetailsPane() {
+    // Instance Variables
+    
+    // Input boxes
+    protected final TextField inpName = new TextField();
+    protected final TextField inpBattleCry = new TextField();
+    protected final TextField inpDeathCry = new TextField();
+    protected final ComboBox<Species> cboSpecies = new ComboBox<>();
+    protected final ComboBox<Weapon> cboWeapon = new ComboBox<>();
+    protected final TextField inpHitPoints = new TextField();
+    protected final TextField inpMana = new TextField();
+    protected final TextField inpAttackDamage = new TextField();
+    protected final TextField inpDefence = new TextField();
+    protected final TextField inpGold = new TextField();
+    protected final TextField inpExperience = new TextField();
+    protected final TextField inpLevel = new TextField();
+    protected final RadioButton rbIsBoss = new RadioButton("Yes");
+    protected final RadioButton rbIsNotBoss = new RadioButton("No");
+    protected final TextArea inpLore = new TextArea();
+    
+    // Buttons
+    protected final Button btEdit = new Button(" Edit", new ImageView("images/icon_edit.png"));
+    protected final Button btDelete = new Button("", new ImageView("images/icon_delete.png"));
+    protected final Button btPrevious = new Button("", new ImageView("images/icon_back.png"));
+    protected final Button btNext = new Button("", new ImageView("images/icon_forward.png"));
+    
+    // Label
+    protected final Label lblNav = new Label(" of 30");
+    
+    // Collection
+    MonsterCollection monsters;
+    
+    // Constructor
+    public DetailsPane(MonsterCollection monsters) {
+       
+       // Save monsters to instance variable
+       this.monsters = monsters;
+       
+       // Ensure all fields are non-editable
+       inpName.setEditable(false);
+       inpBattleCry.setEditable(false);
+       inpDeathCry.setEditable(false);
+       inpHitPoints.setEditable(false);
+       inpMana.setEditable(false);
+       inpAttackDamage.setEditable(false);
+       inpDefence.setEditable(false);
+       inpGold.setEditable(false);
+       inpExperience.setEditable(false);
+       inpLevel.setEditable(false);
+       inpLore.setEditable(false);
+       cboSpecies.setDisable(true);
+       cboWeapon.setDisable(true);
+       rbIsBoss.setDisable(true);
+       rbIsNotBoss.setDisable(true);
        
        // Set gaps
        setPadding(new Insets(20, 20, 20, 20));
        setVgap(10);
        setHgap(20);
        
-       // Set column constraints on gridpane
-       ColumnConstraints col1 = new ColumnConstraints();
-       col1.setPercentWidth(25);
-       ColumnConstraints col2 = new ColumnConstraints();
-       col2.setPercentWidth(25);
-       ColumnConstraints col3 = new ColumnConstraints();
-       col3.setPercentWidth(25);
-       ColumnConstraints col4 = new ColumnConstraints();
-       col4.setPercentWidth(25);
-       getColumnConstraints().addAll(col1, col2, col3, col4);
+       // Set column constraints on GridPane
+       for (int i = 0; i < 4; i++) {
+          ColumnConstraints col = new ColumnConstraints();
+          col.setPercentWidth(25);
+          getColumnConstraints().add(col);
+       }
        
        // Label Heading
        Label lblHeading = new Label("Monster Details");
        lblHeading.setFont(Font.font("Arial", FontWeight.BOLD, 25));
-       Button btEdit = new Button(" Edit", new ImageView("images/icon_edit.png"));
-       
-       Button btDelete = new Button("", new ImageView("images/icon_delete.png"));
+
+       // Create pane for buttons
        HBox paneForButtons = new HBox(5);
        paneForButtons.setAlignment(Pos.CENTER_RIGHT);
        paneForButtons.getChildren().addAll(btEdit, btDelete);
        
-       // Textfield inputs
-       TextField inpName = new TextField();
-       TextField inpBattleCry = new TextField();
-       TextField inpDeathCry = new TextField();
-       
-       // Selection inputs
+       // ComboBox for Species
        Species[] species = Species.values();
-       ComboBox<Species> cboSpecies = new ComboBox<>();
        ObservableList<Species> speciesSelection = FXCollections.observableArrayList(species);
        cboSpecies.getItems().addAll(speciesSelection);
        cboSpecies.setPrefWidth(800);
        cboSpecies.setPromptText("Select a Species");
        
+       // ComboBox for Weapon
        Weapon[] weapons = Weapon.values();
-       ComboBox<Weapon> cboWeapon = new ComboBox<>();
        ObservableList<Weapon> weaponSelection = FXCollections.observableArrayList(weapons);
        cboWeapon.getItems().addAll(weaponSelection);
        cboWeapon.setPrefWidth(800);
        cboWeapon.setPromptText("Select a Weapon");
        
-       // Number Inputs
-       TextField inpHitPoints = new TextField();
-       TextField inpMana = new TextField();
-       TextField inpAttackDamage = new TextField();
-       TextField inpDefence = new TextField();
-       TextField inpGold = new TextField();
-       TextField inpExperience = new TextField();
-       TextField inpLevel = new TextField();
-       
        // Input for isBoss
        HBox inpBoss = new HBox(20);
-       RadioButton rbIsBoss = new RadioButton("Yes");
-       RadioButton rbIsNotBoss = new RadioButton("No");
        inpBoss.getChildren().addAll(rbIsBoss, rbIsNotBoss);
        
        ToggleGroup bossSelection = new ToggleGroup();
@@ -100,38 +130,28 @@ public class DetailsPane extends GridPane {
        rbIsNotBoss.setToggleGroup(bossSelection);
 
        // Input for Lore
-       TextArea inpLore = new TextArea();
-       
        inpLore.setWrapText(true);
        
        // Navigation
-       Button btPrevious = new Button("", new ImageView("images/icon_back.png"));
        btPrevious.setAlignment(Pos.CENTER);
        btPrevious.setPrefWidth(300);
-       Button btNext = new Button("", new ImageView("images/icon_forward.png"));
        btNext.setContentDisplay(ContentDisplay.RIGHT);
        btNext.setAlignment(Pos.CENTER);
        btNext.setPrefWidth(300);
-       Label lblNav = new Label("1 of 30");
-       
        
        // Add to pane
        add(lblHeading, 0, 0, 2, 1);
        add(paneForButtons, 3, 0);
-       
        add(new Label("Name"), 0, 2);
        add(inpName, 0, 3, 2, 1);
-       
        add(new Label("Battle Cry"), 0, 5);
        add(inpBattleCry, 0, 6, 2, 1);
        add(new Label("Death Cry"), 2, 5);
        add(inpDeathCry, 2, 6, 2, 1);  
-
        add(new Label("Species"), 0, 8);
        add(cboSpecies, 0, 9, 2, 1);
        add(new Label("Weapon"), 2, 8);
        add(cboWeapon, 2, 9, 2, 1);
-
        add(new Label("Hit Points"), 0, 11);
        add(inpHitPoints, 0, 12);
        add(new Label("Mana"), 1, 11);
@@ -140,27 +160,123 @@ public class DetailsPane extends GridPane {
        add(inpAttackDamage, 2, 12);
        add(new Label("Defence"), 3, 11);
        add(inpDefence, 3, 12);
-       
        add(new Label("Gold"), 0, 14);
        add(inpGold, 0, 15);
        add(new Label("Experience"), 1, 14);
        add(inpExperience, 1, 15);
        add(new Label("Level"), 2, 14);
        add(inpLevel, 2, 15);
-       
        add(new Label("Boss?"), 0, 17);
        add(inpBoss, 0, 18);
-       
        add(new Label("Lore"), 0, 20);
        add(inpLore, 0, 21, 3, 1);
-       
        add(btPrevious, 0, 23);
        add(lblNav, 1, 23);
        add(btNext, 2, 23);
        
+       // Position nodes
        GridPane.setHalignment(lblNav, HPos.CENTER);
        GridPane.setHalignment(paneForButtons, HPos.RIGHT);
+    }
+    
+    public void displayMonsterDetails(Monster monster) {
+       inpName.setText(monster.getName());
+       inpBattleCry.setText(monster.getBattleCry());
+       inpDeathCry.setText(monster.getDeathCry());
+       cboSpecies.setValue(monster.getSpecies());
+       cboWeapon.setValue(monster.getWeapon());
+       inpHitPoints.setText(monster.getHitPoints() + "");
+       inpMana.setText(monster.getMana() + "");
+       inpAttackDamage.setText(monster.getAttackDamage() + "");
+       inpDefence.setText(monster.getDefence() + "");
+       inpGold.setText(monster.getGold() + "");
+       inpExperience.setText(monster.getExperience() + "");
+       inpLevel.setText(monster.getLevel() + "");
+       inpLore.setText(monster.getLore());
+       lblNav.setText(monster.getMonsterId() + " of " + monsters.getCount());
        
+       // display boss
+       if (monster.isBoss()) {
+          rbIsBoss.setSelected(true);
+       } else {
+          rbIsNotBoss.setSelected(true);
+       }
     }
 
+    // Getters
+    public TextField getInpName() {
+       return inpName;
+    }
+
+    public TextField getInpBattleCry() {
+       return inpBattleCry;
+    }
+
+    public TextField getInpDeathCry() {
+       return inpDeathCry;
+    }
+
+    public ComboBox<Species> getCboSpecies() {
+       return cboSpecies;
+    }
+
+    public ComboBox<Weapon> getCboWeapon() {
+       return cboWeapon;
+    }
+
+    public TextField getInpHitPoints() {
+       return inpHitPoints;
+    }
+
+    public TextField getInpMana() {
+       return inpMana;
+    }
+
+    public TextField getInpAttackDamage() {
+       return inpAttackDamage;
+    }
+
+    public TextField getInpDefence() {
+       return inpDefence;
+    }
+
+    public TextField getInpGold() {
+       return inpGold;
+    }
+
+    public TextField getInpExperience() {
+       return inpExperience;
+    }
+
+    public TextField getInpLevel() {
+       return inpLevel;
+    }
+
+    public RadioButton getRbIsBoss() {
+       return rbIsBoss;
+    }
+
+    public RadioButton getRbIsNotBoss() {
+       return rbIsNotBoss;
+    }
+
+    public TextArea getInpLore() {
+       return inpLore;
+    }
+
+    public Button getBtEdit() {
+       return btEdit;
+    }
+
+    public Button getBtDelete() {
+       return btDelete;
+    }
+
+    public Button getBtPrevious() {
+       return btPrevious;
+    }
+
+    public Button getBtNext() {
+       return btNext;
+    }
 }

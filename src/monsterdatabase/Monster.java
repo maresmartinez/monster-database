@@ -8,7 +8,7 @@
  *  
  */
 
-package monsterdatabase1;
+package monsterdatabase;
 
 import java.io.Serializable;
 

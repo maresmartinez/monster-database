@@ -8,7 +8,7 @@
  *  
  */
 
-package monsterdatabase1;
+package monsterdatabase;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -22,9 +22,13 @@ import javafx.scene.text.FontWeight;
 
 public class ListPane extends VBox {
 
+    // Instance Variables
     private final TableView table = new TableView();
    
+    // Constructor
     public ListPane() {
+       
+       // Style Pane
        setPadding(new Insets(20, 20, 20, 20));
        
        // Label Heading
@@ -37,12 +41,15 @@ public class ListPane extends VBox {
        table.setPrefWidth(450);
        table.setPrefHeight(800);
        
+       // Names that will be displayed in table column heading
        String[] colHeadings = {
           "ID", "Name", "Weapon",
           "Species", "Hit Points", "Mana",
           "Defence", "Attack", "Gold",
           "Experience", "Level"
        };
+       
+       // Names of instance variables in Monster object
        String[] monsterVariables = {
           "monsterId", "name", "weapon",
           "species", "hitPoints", "mana",
@@ -58,12 +65,25 @@ public class ListPane extends VBox {
           table.getColumns().add(col);
        }
        
+       // Add table to Pane
        getChildren().add(table);
 
     }
     
+    /**
+     * This will display a List on the TableView
+     * 
+     * @param list to be displayed
+     */
     public void displayMonsters(ObservableList<Monster> list) {
        table.setItems(list);
+    }
+    
+    /**
+     * Refreshes table to reflect any changes to database
+     */
+    public void refreshTable() {
+       table.refresh();
     }
    
 }

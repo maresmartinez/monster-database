@@ -8,7 +8,7 @@
  *  
  */
 
-package monsterdatabase1;
+package monsterdatabase;
 
 public enum Species {
    ANIMAL,

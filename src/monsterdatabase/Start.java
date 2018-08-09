@@ -4,11 +4,16 @@
  * Instructor: Hosein Marzi
  * Date Created: 6-Aug-2018
  *  
+ * References (From entire assignment):
+ *    http://www.java2s.com/Tutorials/Java/JavaFX/0650__JavaFX_TableView.htm
+ *    http://code.makery.ch/blog/javafx-dialogs-official/
+ *    https://stackoverflow.com/questions/11065140/javafx-2-1-tableview-refresh-items
+ *
  * @author Mariel Martinez
  *  
  */
 
-package monsterdatabase1;
+package monsterdatabase;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,13 +45,12 @@ public class Start extends Application {
        DatabasePane pane = new DatabasePane(monsters);
        
        // Create a scene and set it on the primaryStage
-       Scene scene = new Scene(pane);
+       Scene scene = new Scene(pane, 1100, 650);
        primaryStage.setTitle("Monster Database");
        primaryStage.getIcons().add(new Image("images/icon_application.png"));
+       primaryStage.setMaximized(true);
        primaryStage.setScene(scene);
        primaryStage.show();
-       
-       primaryStage.setMaximized(true);
     }
 
     /**

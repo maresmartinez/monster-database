@@ -8,7 +8,7 @@
  *  
  */
 
-package monsterdatabase1;
+package monsterdatabase;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,8 +73,18 @@ public class MonsterCollection implements Serializable {
     * @return true if successful, false otherwise
     */
    public boolean delete(int monsterId) {
-      this.count--;
-      return monsters.remove(this.search(monsterId));
+      if (monsters.remove(this.search(monsterId))) {
+         
+         // Remap all Monster IDs to their corresponding number in array
+         for (int i = 0; i < monsters.size(); i++) {
+            monsters.get(i).setMonsterId(i + 1);
+         } 
+         
+         this.count--;
+         return true;
+      } else {
+         return false;
+      }
    }
    
    /**

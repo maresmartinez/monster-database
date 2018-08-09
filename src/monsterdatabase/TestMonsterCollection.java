@@ -8,7 +8,7 @@
  *  
  */
 
-package monsterdatabase1;
+package monsterdatabase;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,9 +31,10 @@ public class TestMonsterCollection {
           System.out.println("ALL MONSTERS");
           monsters.printToConsole();
           
-          System.out.println("\nFILTERED");
-          MonsterCollection filtered = monsters.filter(Weapon.FISTS);
-          filtered.printToConsole();
+          monsters.delete(3);
+          
+          System.out.println("\nREMOVED ONE");
+          monsters.printToConsole();
           
        } // try-with-resources automatically closes input
    }
